@@ -2,6 +2,8 @@
 
 A deep learning system for next-day volatility forecasting of Apple Inc. (AAPL) stock, built with PyTorch and deployed as an interactive Streamlit dashboard.
 
+![App Interface](assets/prediction_plot.png)
+
 ---
 
 ## 🎯 Problem Statement
@@ -22,7 +24,7 @@ This project predicts **tomorrow's realized volatility** (20-day rolling standar
 
 The model beats both the naive persistence baseline and the classical GARCH model, which has been the industry standard since 1986.
 
-![Predicted vs Actual Volatility](assets/prediction_plot.png)
+![Predicted vs Actual Volatility](assets/predictions_vs_true_plot.png)
 
 ---
 
