@@ -110,7 +110,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ── Hyperparameters (must match your trained model) ───────────────────────────
+# ── Hyperparameters  ───────────────────────────
 W            = 90
 HIDDEN_SIZE  = 256
 NUM_LAYERS   = 2
