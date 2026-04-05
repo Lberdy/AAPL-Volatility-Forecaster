@@ -66,7 +66,7 @@ Streamlit Dashboard
 
 ---
 
-## 🔧 Features (16 total)
+## 🔧 Features (17 total)
 
 | Category | Features |
 |---|---|
