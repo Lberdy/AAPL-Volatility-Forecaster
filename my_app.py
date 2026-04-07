@@ -110,11 +110,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ── Hyperparameters  ───────────────────────────
+# ── Hyperparameters (must match your trained model) ───────────────────────────
 W            = 90
-HIDDEN_SIZE  = 256
-NUM_LAYERS   = 2
-DROPOUT      = 0.25588662208124313
+HIDDEN_SIZE  = 128
+NUM_LAYERS   = 1
+DROPOUT      = 0.29255451180333386
 N_FEATURES   = 17
 
 FEATURES = [
@@ -124,8 +124,8 @@ FEATURES = [
     "vol_ratio", "rsi", "macd", 'volume_change', "volume_ratio"
 ]
 
-MODEL_PATH  = "models/model_weights4.pth"
-SCALER_PATH = "models/scaler.pkl"
+MODEL_PATH  = "models/model_weights5.pth"
+SCALER_PATH = "models/scaler1.pkl"
 
 
 # ── Model definition ─────────────────────────
@@ -243,8 +243,23 @@ def load_model_and_scaler():
 @st.cache_data(ttl=3600)
 def fetch_and_predict(history_days):
     # download enough data for features + window
-    raw = yf.download("AAPL", period="3y", auto_adjust=True, progress=False)
-    raw.columns = raw.columns.get_level_values(0)
+    
+    success = True
+
+    try:
+        raw = yf.download("AAPL", period="3y", auto_adjust=True, progress=False)
+        if raw.empty:
+            raise ValueError("Download returned empty data (no internet?)")
+        raw.columns = raw.columns.get_level_values(0)
+    except:
+        success = False
+
+    if success:
+        raw.to_csv('cached.csv', encoding='utf-8')
+    else:
+        raw = pd.read_csv('cached.csv', index_col=0, parse_dates=True)
+        print(f"Download failed, using cached data.")
+
     raw = raw.ffill()
 
     features_df = compute_features(raw)
@@ -358,7 +373,7 @@ with st.sidebar:
     <div class='info-row'><span class='info-key'>Layers</span><span class='info-val'>{NUM_LAYERS}</span></div>
     <div class='info-row'><span class='info-key'>Window (W)</span><span class='info-val'>{W} days</span></div>
     <div class='info-row'><span class='info-key'>Features</span><span class='info-val'>{N_FEATURES}</span></div>
-    <div class='info-row'><span class='info-key'>Relative error</span><span class='info-val'>9.61%</span></div>
+    <div class='info-row'><span class='info-key'>Relative error</span><span class='info-val'>9.6%</span></div>
     <div class='info-row'><span class='info-key'>vs GARCH</span><span class='info-val'>✅ Better</span></div>
     <div class='info-row'><span class='info-key'>vs Persistence</span><span class='info-val'>✅ Better</span></div>
     """, unsafe_allow_html=True)

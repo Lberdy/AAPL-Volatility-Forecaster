@@ -20,7 +20,7 @@ This project predicts **tomorrow's realized volatility** (20-day rolling standar
 |---|---|
 | Naive persistence baseline | ~17% |
 | GARCH benchmark (industry standard) | 15–25% |
-| **This LSTM model** | **9.61%** |
+| **This LSTM model** | **9.6%** |
 
 The model beats both the naive persistence baseline and the classical GARCH model, which has been the industry standard since 1986.
 
@@ -32,12 +32,16 @@ The model beats both the naive persistence baseline and the classical GARCH mode
 
 ```
 ├── model_training/
-│   └── model_building.ipynb      # full pipeline notebook
+│   ├── model_building.ipynb      # full pipeline notebook
+│   ├── functions.py             # contains all the functions i need
+│   └── fine-tuning.ipynb
 ├── my_app.py                    # Streamlit dashboard
 ├── models/
 │   ├── model_weights4.pth        # trained model weights (4 means version 4 ^_^)
 │   └── scaler.pkl            # fitted feature scaler
-└── README.md
+├── README.md
+├── requirements.txt
+└── cached.csv       # contains a cached 3 years' volatility data, the program use it in case it could not load the latest data from yahoo finance
 ```
 
 ---
@@ -47,7 +51,7 @@ The model beats both the naive persistence baseline and the classical GARCH mode
 ```
 yfinance (raw OHLCV)
     ↓
-Feature Engineering (16 features)
+Feature Engineering (17 features)
     ↓
 Chronological Train/Test Split (80/20)
     ↓
@@ -66,7 +70,7 @@ Streamlit Dashboard
 
 ---
 
-## 🔧 Features (17 total)
+## 🔧 Features (16 total)
 
 | Category | Features |
 |---|---|
@@ -83,13 +87,11 @@ Streamlit Dashboard
 ```
 Input (batch, 90, 16)
     ↓
-LSTM Layer 1 (hidden=256)
+LSTM Layer 1 (hidden=128)
     ↓
-LSTM Layer 2 (hidden=256)
+Dropout (p=0.292)
     ↓
-Dropout (p=0.256)
-    ↓
-Linear (256 → 1)
+Linear (128 → 1)
     ↓
 ReLU (ensures positive output)
     ↓
@@ -101,15 +103,15 @@ Predicted volatility
 | Parameter | Value |
 |---|---|
 | Window size (W) | 90 days |
-| Hidden size | 256 |
-| Num layers | 2 |
-| Dropout | 0.2559 |
-| Learning rate | 0.00145 |
+| Hidden size | 128 |
+| Num layers | 1 |
+| Dropout | 0.29255451180333386 |
+| Learning rate | 0.0011482784997348093 |
 | Batch size | 64 |
-| Patience | 21 |
-| Loss function | Quantile loss (q=0.68) |
+| Patience | 17 |
+| Loss function | Quantile loss (q=0.63) |
 
-The quantile loss with q=0.68 was chosen deliberately — it asymmetrically penalizes underprediction of volatility spikes, which is more costly than overprediction in a risk management context.
+The quantile loss with q=0.63 was chosen deliberately — it asymmetrically penalizes underprediction of volatility spikes, which is more costly than overprediction in a risk management context.
 
 ---
 
@@ -169,8 +171,8 @@ GridSearch exhaustively tries all combinations — computationally expensive for
 | Manual tuning (dropout, patience) | 14.86% |
 | Optuna hyperparameter search | 12.84% |
 | More training data (tr + val) | 11.55% |
-| Quantile loss (q=0.68) | 10.26% |
-| W optimization via Optuna | **9.61%** |
+| Quantile loss (q=0.63) | 10.26% |
+| W optimization via Optuna | **9.6%** |
 
 ---
 
