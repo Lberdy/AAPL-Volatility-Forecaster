@@ -1,9 +1,0 @@
-numpy
-pandas
-matplotlib
-joblib
-torch
-ta
-yfinance
-scikit-learn
-optuna
