@@ -67,7 +67,7 @@ RobustScaler (fit on train only — no leakage)
     ↓
 Model Training (quantile loss + early stopping + gradient clipping)
     ↓
-Optuna Hyperparameter Tuning (50 trials per model, TPE sampler)
+Optuna Hyperparameter Tuning (100 trials per model, TPE sampler)
     ↓
 Evaluation (RMSE + relative error + directional hit ratio)
     ↓
