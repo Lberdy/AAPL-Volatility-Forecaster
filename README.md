@@ -43,8 +43,12 @@ This project predicts **tomorrow's realized volatility** (20-day rolling standar
 │   └── fine-tuning.ipynb
 ├── my_app.py                    # Streamlit dashboard
 ├── models/
-│   ├── model_weights4.pth        # trained model weights (4 means version 4 ^_^)
-│   └── scaler.pkl            # fitted feature scaler
+│   ├── model_weights_GRU.pth
+│   ├── model_weights_LSTM.pth
+│   ├── optuna_study_GRU.pkl
+│   ├── optuna_study_LSTM.pkl
+│   ├── scaler_LSTM.pkl       
+│   └── scaler_GRU.pkl       
 ├── README.md
 ├── requirements.txt
 └── cached.csv  # contains a cached 3 years' volatility data, the program use it in case it could not load the latest data from yahoo finance
